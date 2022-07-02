@@ -1,0 +1,367 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API AUTH With JWT",
+        "description": "This is a sample crud barang with mongodb",
+        "contact": {
+            "name": "Ahmad Fauzi",
+            "email": "fauzi442097@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Login into system",
+                "operationId": "fead3fd462e43c06d3845d2b11c43e8e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "description": "Username login",
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "example": "admin"
+                                    },
+                                    "password": {
+                                        "description": "Password login",
+                                        "type": "string",
+                                        "minLength": 5,
+                                        "example": "admin"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "example": "Login Success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "description": "Token JWT",
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvL2xvZ2luIiwiaWF0IjoxNjU2NzYxMzU1LCJleHAiOjE2NTY3NjQ5NTUsIm5iZiI6MTY1Njc2MTM1NSwianRpIjoiSUF1TU1aT3g4ZDJ1clRkRSJ9.ehdl9Y4yYOO9nLn8LJsdHw8W9yisa05ZG3SxaJS5P3k"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "400"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "username": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The username field is required."
+                                                    }
+                                                },
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The password is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Logout from system",
+                "operationId": "eac484ff6dd771980c5585d9e2ac42cf",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "bearerAuth"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "example": "Logout Success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Token is Invalid"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Token is Expired"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Authorization Token not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "401"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized. Please login again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/checkLogin": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Checklogin",
+                "description": "Checklogin",
+                "operationId": "08a3918fabdf3e6a5ed7507efd3efb7f",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "bearerAuth"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "example": "Authorization"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Token is Invalid"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Token is Expired"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "number",
+                                                    "example": "400"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Authorization Token not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "401"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized. Please login again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "NotFoundResponse": {
+                "title": "Response Not Found",
+                "properties": {
+                    "code": {
+                        "type": "number",
+                        "example": "404"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Data Not Found"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

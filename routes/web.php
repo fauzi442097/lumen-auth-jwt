@@ -14,7 +14,8 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    // return $router->app->version();
+    return view('welcome');
 });
 
 $router->post('/login', 'HomeController@login');
